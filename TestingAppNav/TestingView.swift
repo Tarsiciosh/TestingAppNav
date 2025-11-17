@@ -32,7 +32,7 @@ struct ShadowedRect<Content: View>: View {
         shadowOpacity: Double = 0.08,
         shadowRadius: CGFloat = 7,
         shadowOffset: CGSize = CGSize(width: 0, height: 0.7),
-        backgroundColor: Color = .gray,
+        backgroundColor: Color = .white,
         @ViewBuilder content: () -> Content
     ) {
         self.cornerRadius = cornerRadius
@@ -58,30 +58,37 @@ struct ShadowedRect<Content: View>: View {
 }
 
 struct ShimmerModifier: ViewModifier {
-    @State private var phase: CGFloat = 0
+    @State private var phase: CGFloat = -0.5
 
     func body(content: Content) -> some View {
         content
             .overlay(
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: Color.white.opacity(0), location: phase - 0.3),
-                        .init(color: Color.white.opacity(0.3), location: phase - 0.15),
-                        .init(color: Color.white.opacity(0.6), location: phase),
-                        .init(color: Color.white.opacity(0.3), location: phase + 0.15),
-                        .init(color: Color.white.opacity(0), location: phase + 0.3)
-                    ]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .blendMode(.screen)
+                GeometryReader { geometry in
+                    Rectangle()
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(stops: [
+                                    .init(color: Color.white.opacity(0), location: 0),
+                                    .init(color: Color.white.opacity(0.3), location: 0.3),
+                                    .init(color: Color.white.opacity(0.7), location: 0.5),
+                                    .init(color: Color.white.opacity(0.3), location: 0.7),
+                                    .init(color: Color.white.opacity(0), location: 1.0)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .frame(width: geometry.size.width * 0.6)
+                        .offset(x: geometry.size.width * phase)
+                        .blendMode(.overlay)
+                }
             )
             .onAppear {
                 withAnimation(
                     Animation.linear(duration: 1.5)
                         .repeatForever(autoreverses: false)
                 ) {
-                    phase = 1.3
+                    phase = 1.5
                 }
             }
     }
