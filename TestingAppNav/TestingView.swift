@@ -5,9 +5,8 @@ struct TestingView: View {
 
     var body: some View {
         ShadowedRect {
-            Text("")
+            ShimmerView()
                 .frame(width: 200, height: 80)
-                .shimmer()
         }
     }
 }
@@ -97,5 +96,42 @@ struct ShimmerModifier: ViewModifier {
 extension View {
     func shimmer() -> some View {
         modifier(ShimmerModifier())
+    }
+}
+
+struct ShimmerView: View {
+    @State private var phase: CGFloat = -0.5
+
+    var body: some View {
+        GeometryReader { geometry in
+            Rectangle()
+                .fill(Color.white)
+                .overlay(
+                    Rectangle()
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(stops: [
+                                    .init(color: Color(white: 0.92).opacity(0), location: 0),
+                                    .init(color: Color(white: 0.92).opacity(0.5), location: 0.3),
+                                    .init(color: Color(white: 0.92).opacity(1.0), location: 0.5),
+                                    .init(color: Color(white: 0.92).opacity(0.5), location: 0.7),
+                                    .init(color: Color(white: 0.92).opacity(0), location: 1.0)
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .frame(width: geometry.size.width * 0.6)
+                        .offset(x: geometry.size.width * phase)
+                )
+                .onAppear {
+                    withAnimation(
+                        Animation.linear(duration: 1.5)
+                            .repeatForever(autoreverses: false)
+                    ) {
+                        phase = 1.5
+                    }
+                }
+        }
     }
 }
