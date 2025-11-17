@@ -5,7 +5,7 @@ struct TestingView: View {
 
     var body: some View {
         ShadowedRect {
-            Text("Hello")
+            Text("")
                 .frame(width: 200, height: 80)
                 .shimmer()
         }
@@ -68,11 +68,11 @@ struct ShimmerModifier: ViewModifier {
                         .fill(
                             LinearGradient(
                                 gradient: Gradient(stops: [
-                                    .init(color: Color.white.opacity(0), location: 0),
-                                    .init(color: Color.white.opacity(0.3), location: 0.3),
-                                    .init(color: Color.white.opacity(0.7), location: 0.5),
-                                    .init(color: Color.white.opacity(0.3), location: 0.7),
-                                    .init(color: Color.white.opacity(0), location: 1.0)
+                                    .init(color: Color.red.opacity(0), location: 0),
+                                    .init(color: Color.red.opacity(0.3), location: 0.3),
+                                    .init(color: Color.red.opacity(0.7), location: 0.5),
+                                    .init(color: Color.red.opacity(0.3), location: 0.7),
+                                    .init(color: Color.red.opacity(0), location: 1.0)
                                 ]),
                                 startPoint: .leading,
                                 endPoint: .trailing
