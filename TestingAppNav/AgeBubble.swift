@@ -1,39 +1,44 @@
 import SwiftUI
+import Combine
 
 struct AgeBubble: View {
-    var radii: [CGFloat] = [1.0, 0.99, 1.05, 0.92, 1.06, 0.91, 1]
+    @State private var time: Double = 0
+    var maxDelta: CGFloat = 0.03
+    var animationSpeed: Double = 1 //higher more speed
     let baseRadius: CGFloat = 150
+    let numberOfPoints: Int = 7
+
+    // Random phase offsets for each point to create organic movement
+    let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]
+    let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]
 
     var body: some View {
-        Canvas { context, size in
-            let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        TimelineView(.animation) { timeline in
+            Canvas { context, size in
+                let center = CGPoint(x: size.width / 2, y: size.height / 2)
 
-            let path = createSmoothPath(center: center)
-            context.stroke(path, with: .color(.green), lineWidth: 2)
+                // Calculate current radii based on time
+                let currentRadii = calculateRadii(at: timeline.date.timeIntervalSinceReferenceDate)
+                let path = createSmoothPath(center: center, radii: currentRadii)
+                context.stroke(path, with: .color(.green), lineWidth: 2)
+            }
         }
         .frame(width: 400, height: 400)
     }
-}
 
-extension AgeBubble {
-    func calculatePoints(center: CGPoint) -> [CGPoint] {
-        var points: [CGPoint] = []
-        
-        for i in 0..<radii.count {
-            let angle = (CGFloat(i) / CGFloat(radii.count)) * 2 * .pi
-            let radius = baseRadius * radii[i]
-            let x = center.x + cos(angle) * radius
-            let y = center.y + sin(angle) * radius
-            points.append(CGPoint(x: x, y: y))
+    private func calculateRadii(at time: Double) -> [CGFloat] {
+        return (0..<numberOfPoints).map { i in
+            let phase = phaseOffsets[i]
+            let frequency = frequencies[i]
+            let wave = sin(time * animationSpeed * frequency + phase)
+            return 1.0 + (wave * maxDelta)
         }
-        
-        return points
     }
 }
 
 extension AgeBubble {
-    func createSmoothPath(center: CGPoint) -> Path {
-        let points = calculatePoints(center: center)
+    func createSmoothPath(center: CGPoint, radii: [CGFloat]) -> Path {
+        let points = calculatePoints(center: center, radii: radii)
 
         var path = Path()
 
@@ -64,6 +69,22 @@ extension AgeBubble {
         }
 
         return path
+    }
+}
+
+extension AgeBubble {
+    func calculatePoints(center: CGPoint, radii: [CGFloat]) -> [CGPoint] {
+        var points: [CGPoint] = []
+
+        for i in 0..<radii.count {
+            let angle = (CGFloat(i) / CGFloat(radii.count)) * 2 * .pi
+            let radius = baseRadius * radii[i]
+            let x = center.x + cos(angle) * radius
+            let y = center.y + sin(angle) * radius
+            points.append(CGPoint(x: x, y: y))
+        }
+
+        return points
     }
 }
 
