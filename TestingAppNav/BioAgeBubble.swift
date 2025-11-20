@@ -11,6 +11,8 @@ struct BioAgeBubble: View {
     let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]//, 1.1, 0.8, 0.5, 1.3, 0.65, 1.3, 0.6]
 
     var numberOfPoints: Int { phaseOffsets.count }
+    
+    var outerRingColor: Color { Color(red: 0.2, green: 1.0, blue: 0.3) }
 
     var body: some View {
         TimelineView(.animation) { timeline in
@@ -23,10 +25,12 @@ struct BioAgeBubble: View {
                 // Create base path
                 let basePath = createSmoothPath(center: center, radii: currentRadii)
 
-                // Draw concentric paths with increasing opacity
-                let numberOfLayers = 32
                 let innerScale: CGFloat = 0.5
+                let lineWidth: CGFloat = 2
 
+                // Calculate number of layers based on ring width and line width
+                let ringWidth = baseRadius * (1.0 - innerScale)
+                let numberOfLayers = Int(ceil(ringWidth / lineWidth * 1.01))  //multiplier for overlap
                 for i in 0..<numberOfLayers {
                     // Calculate scale for this layer (from 1.0 to innerScale)
                     let t = CGFloat(i) / CGFloat(numberOfLayers)
@@ -36,14 +40,14 @@ struct BioAgeBubble: View {
                     let opacity = 1 - t  // From 1.0 to 0.0
 
                     // Create scaled path
-                    var layerPath = basePath.with(scale: scale, center: center)
+                    let layerPath = basePath.with(scale: scale, center: center)
 
                     // Stroke with green at calculated opacity
-                    context.stroke(layerPath, with: .color(.green.opacity(opacity)), lineWidth: 2)
+                    context.stroke(layerPath, with: .color(.green.opacity(opacity)), lineWidth: lineWidth)
                 }
                 
-                let outerPath = basePath.with(scale: 1.04, center: center)
-                context.stroke(outerPath, with: .color(.green.opacity(1)), lineWidth: 2)
+                let outerPath = basePath.with(scale: 1, center: center)
+                context.stroke(outerPath, with: .color(outerRingColor), lineWidth: lineWidth)
             }
         }
     }
