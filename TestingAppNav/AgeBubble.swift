@@ -1,42 +1,38 @@
 import SwiftUI
 
 struct AgeBubble: View {
-    let radii: [CGFloat]
-    let baseRadius: CGFloat
-    let numberOfPoints: Int
-
-    init(radii: [CGFloat] = [1.0, 0.99, 1.05, 0.92, 1.06, 0.91, 1], baseRadius: CGFloat = 150) {
-        self.radii = radii
-        self.baseRadius = baseRadius
-        self.numberOfPoints = radii.count
-    }
+    var radii: [CGFloat] = [1.0, 0.99, 1.05, 0.92, 1.06, 0.91, 1]
+    let baseRadius: CGFloat = 150
 
     var body: some View {
         Canvas { context, size in
             let center = CGPoint(x: size.width / 2, y: size.height / 2)
 
-            // Draw the smooth blob shape
             let path = createSmoothPath(center: center)
             context.stroke(path, with: .color(.green), lineWidth: 2)
         }
         .frame(width: 400, height: 400)
     }
+}
 
-    private func calculatePoints(center: CGPoint) -> [CGPoint] {
+extension AgeBubble {
+    func calculatePoints(center: CGPoint) -> [CGPoint] {
         var points: [CGPoint] = []
-
-        for i in 0..<numberOfPoints {
-            let angle = (CGFloat(i) / CGFloat(numberOfPoints)) * 2 * .pi
+        
+        for i in 0..<radii.count {
+            let angle = (CGFloat(i) / CGFloat(radii.count)) * 2 * .pi
             let radius = baseRadius * radii[i]
             let x = center.x + cos(angle) * radius
             let y = center.y + sin(angle) * radius
             points.append(CGPoint(x: x, y: y))
         }
-
+        
         return points
     }
+}
 
-    private func createSmoothPath(center: CGPoint) -> Path {
+extension AgeBubble {
+    func createSmoothPath(center: CGPoint) -> Path {
         let points = calculatePoints(center: center)
 
         var path = Path()
