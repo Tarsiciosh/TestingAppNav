@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BioAgeBubble: View {
     @State private var time: Double = 0
-    var maxDelta: CGFloat = 0.06
+    var maxDelta: CGFloat = 0.04
     var animationSpeed: Double = 1.5
     let baseRadius: CGFloat = 80
 
@@ -23,31 +23,32 @@ struct BioAgeBubble: View {
                 // Create base path
                 let basePath = createSmoothPath(center: center, radii: currentRadii)
 
-                // Draw 10 concentric paths with increasing opacity
-                let numberOfLayers = 10
-                let innerScale: CGFloat = 0.6
+                // Draw concentric paths with increasing opacity
+                let numberOfLayers = 32
+                let innerScale: CGFloat = 0.5
 
                 for i in 0..<numberOfLayers {
                     // Calculate scale for this layer (from 1.0 to innerScale)
-                    let t = CGFloat(i) / CGFloat(numberOfLayers - 1)
+                    let t = CGFloat(i) / CGFloat(numberOfLayers)
                     let scale = 1.0 - (t * (1.0 - innerScale))
 
                     // Calculate opacity (decrease as we go inward)
-                    let opacity = 1.0 - t  // From 1.0 to 0.0
+                    let opacity = 1 - t  // From 1.0 to 0.0
 
                     // Create scaled path
-                    var layerPath = basePath
-                    let scaleTransform = CGAffineTransform(translationX: center.x, y: center.y)
-                        .scaledBy(x: scale, y: scale)
-                        .translatedBy(x: -center.x, y: -center.y)
-                    layerPath = layerPath.applying(scaleTransform)
+                    var layerPath = basePath.with(scale: scale, center: center)
 
                     // Stroke with green at calculated opacity
                     context.stroke(layerPath, with: .color(.green.opacity(opacity)), lineWidth: 2)
                 }
+                
+                let outerPath = basePath.with(scale: 1.04, center: center)
+                context.stroke(outerPath, with: .color(.green.opacity(1)), lineWidth: 2)
             }
         }
     }
+    
+    
 
     private func calculateRadii(at time: Double) -> [CGFloat] {
         return (0..<numberOfPoints).map { i in
@@ -108,6 +109,15 @@ extension BioAgeBubble {
         }
 
         return points
+    }
+}
+
+extension Path {
+    func with(scale: Double, center: CGPoint) -> Path {
+        let scaleTransform = CGAffineTransform(translationX: center.x, y: center.y)
+            .scaledBy(x: scale, y: scale)
+            .translatedBy(x: -center.x, y: -center.y)
+        return self.applying(scaleTransform)
     }
 }
 
