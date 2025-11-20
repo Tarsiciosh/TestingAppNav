@@ -51,9 +51,9 @@ struct BioAgeBubble: View {
             }
         }
     }
-    
-    
+}
 
+extension BioAgeBubble {
     private func calculateRadii(at time: Double) -> [CGFloat] {
         return (0..<numberOfPoints).map { i in
             let phase = phaseOffsets[i]
