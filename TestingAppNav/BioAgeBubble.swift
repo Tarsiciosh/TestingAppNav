@@ -1,16 +1,16 @@
 import SwiftUI
-import Combine
 
-struct AgeBubble: View {
+struct BioAgeBubble: View {
     @State private var time: Double = 0
     var maxDelta: CGFloat = 0.03
     var animationSpeed: Double = 1 //higher more speed
     let baseRadius: CGFloat = 150
-    let numberOfPoints: Int = 7
 
     // Random phase offsets for each point to create organic movement
     let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]
     let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]
+
+    var numberOfPoints: Int { phaseOffsets.count }
 
     var body: some View {
         TimelineView(.animation) { timeline in
@@ -36,7 +36,7 @@ struct AgeBubble: View {
     }
 }
 
-extension AgeBubble {
+extension BioAgeBubble {
     func createSmoothPath(center: CGPoint, radii: [CGFloat]) -> Path {
         let points = calculatePoints(center: center, radii: radii)
 
@@ -72,7 +72,7 @@ extension AgeBubble {
     }
 }
 
-extension AgeBubble {
+extension BioAgeBubble {
     func calculatePoints(center: CGPoint, radii: [CGFloat]) -> [CGPoint] {
         var points: [CGPoint] = []
 
@@ -89,5 +89,5 @@ extension AgeBubble {
 }
 
 #Preview {
-    AgeBubble()
+    BioAgeBubble()
 }

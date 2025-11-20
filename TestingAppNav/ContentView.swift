@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var showPresented: Bool = false
     
     var body: some View {
-        AgeBubble()
+        BioAgeBubble()
         
 //        VStack {
 //            Image(systemName: "globe")
