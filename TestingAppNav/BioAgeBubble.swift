@@ -131,3 +131,61 @@ extension Path {
     }
     .background(.black)
 }
+
+
+
+/*
+ struct BioAgeBubble: View {
+     var mainColor: Color = Color.green
+    
+     @State private var time: Double = 0
+     var maxDelta: CGFloat = 0.03
+     var animationSpeed: Double = 1.5
+     let baseRadius: CGFloat = 100
+
+     // Random phase offsets for each point to create organic movement
+     let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]
+     let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]
+
+     var numberOfPoints: Int { phaseOffsets.count }
+
+     var body: some View {
+         TimelineView(.animation) { timeline in
+             Canvas { context, size in
+                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
+
+                 let currentRadii = calculateRadii(at: timeline.date.timeIntervalSinceReferenceDate)
+
+                 let outerPath = createSmoothPath(center: center, radii: currentRadii)
+
+                 let innerScale: CGFloat = 0.6
+
+                 // Calculate mean radius
+                 let meanRadius = currentRadii.reduce(0, +) / CGFloat(currentRadii.count)
+                 let dynamicStartRadius = baseRadius * meanRadius * innerScale
+
+                 // Add smooth random variation using time-based noise
+                 let time = timeline.date.timeIntervalSinceReferenceDate
+                 let randomVariation1 = sin(time * 2.5) * 2  // Smooth oscillation for inner radius
+
+                 let gradient = Gradient(colors: [
+                     mainColor.opacity(0),
+                     mainColor.opacity(0.2),
+                     mainColor.opacity(0.5),
+                     mainColor.opacity(0.8)
+                 ])
+
+                 context.fill(outerPath, with: .radialGradient(
+                     gradient,
+                     center: center,
+                     startRadius: dynamicStartRadius + randomVariation1,
+                     endRadius: baseRadius * meanRadius
+                 ))
+                 
+                 context.stroke(outerPath, with: .color(mainColor), lineWidth: 2)
+             }
+         }
+     }
+ }
+*/
+
