@@ -1,12 +1,36 @@
 import SwiftUI
 
+struct MiniBubbleConfig {
+    let phaseX: Double
+    let phaseY: Double
+    let frequencyX: Double
+    let frequencyY: Double
+    let sizePhase: Double
+    let sizeFrequency: Double
+    let baseSize: Double
+    let color: Color
+}
+
 struct DynamicBubble: View {
     var mainColor: Color = Color.green
-   
+
     @State private var time: Double = 0
     var maxDelta: CGFloat = 0.03
     var animationSpeed: Double = 1.5
     let baseRadius: CGFloat = 100
+
+    // Mini bubble constraints
+    var miniBubbleMinRadius: CGFloat = 70
+    var miniBubbleMaxRadius: CGFloat = 90
+
+    // Mini bubble configurations - each has unique movement pattern
+    let miniBubbles: [MiniBubbleConfig] = [
+        MiniBubbleConfig(phaseX: 0.0, phaseY: 1.5, frequencyX: 0.8, frequencyY: 1.1, sizePhase: 0.0, sizeFrequency: 1.3, baseSize: 6, color: .green),
+        MiniBubbleConfig(phaseX: 2.1, phaseY: 0.3, frequencyX: 1.2, frequencyY: 0.7, sizePhase: 1.2, sizeFrequency: 0.9, baseSize: 4, color: .green),
+        MiniBubbleConfig(phaseX: 1.0, phaseY: 2.8, frequencyX: 0.6, frequencyY: 1.4, sizePhase: 2.5, sizeFrequency: 1.1, baseSize: 5, color: .green),
+        MiniBubbleConfig(phaseX: 3.5, phaseY: 1.2, frequencyX: 1.0, frequencyY: 0.9, sizePhase: 0.8, sizeFrequency: 1.5, baseSize: 2, color: .green),
+        MiniBubbleConfig(phaseX: 0.7, phaseY: 3.2, frequencyX: 0.9, frequencyY: 1.3, sizePhase: 3.1, sizeFrequency: 0.7, baseSize: 1, color: .green),
+    ]
 
     // Random phase offsets for each point to create organic movement
     let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]
@@ -48,8 +72,17 @@ struct DynamicBubble: View {
                 ))
                 
                 context.stroke(outerPath, with: .color(mainColor), lineWidth: 2)
-                
-                addMiniBubbleIn(context: context, position: center, size: 10, color: .gray, opacity: 1)
+
+                // Draw all mini bubbles
+                let currentTime = timeline.date.timeIntervalSinceReferenceDate
+                for config in miniBubbles {
+                    let (position, bubbleSize, opacity) = calculateMiniBubbleValues(
+                        at: currentTime,
+                        config: config,
+                        center: center
+                    )
+                    addMiniBubbleIn(context: context, position: position, size: bubbleSize, color: config.color, opacity: opacity)
+                }
             }
         }
     }
@@ -58,11 +91,49 @@ struct DynamicBubble: View {
 extension DynamicBubble {
     func addMiniBubbleIn(context: GraphicsContext, position: CGPoint, size: Double, color: Color, opacity: Double) {
         var bubblePath = Path()
-        bubblePath.addEllipse(in: CGRect(origin: position, size: CGSize(width: size, height: size)))
+        // Center the bubble at position (not offset by size)
+        let rect = CGRect(
+            x: position.x - size / 2,
+            y: position.y - size / 2,
+            width: size,
+            height: size
+        )
+        bubblePath.addEllipse(in: rect)
         context.fill(bubblePath, with: .color(color.opacity(opacity)))
     }
-}
 
+    func calculateMiniBubbleValues(at time: Double, config: MiniBubbleConfig, center: CGPoint) -> (CGPoint, Double, Double) {
+        // Calculate normalized position using sin waves (range -1 to 1)
+        let normalizedX = sin(time * animationSpeed * config.frequencyX + config.phaseX)
+        let normalizedY = sin(time * animationSpeed * config.frequencyY + config.phaseY)
+
+        // Map the normalized values to radius range
+        let radiusRange = miniBubbleMaxRadius - miniBubbleMinRadius
+
+        // Convert to polar-ish coordinates for more natural circular movement
+        let angle = atan2(normalizedY, normalizedX)
+        let normalizedDistance = sqrt(normalizedX * normalizedX + normalizedY * normalizedY)
+        let clampedDistance = min(normalizedDistance, 1.0) // Clamp to unit circle
+
+        // Map distance to min/max radius
+        let radius = miniBubbleMinRadius + (clampedDistance * radiusRange)
+
+        // Calculate final position relative to center
+        let position = CGPoint(
+            x: center.x + CGFloat(cos(angle)) * radius,
+            y: center.y + CGFloat(sin(angle)) * radius
+        )
+
+        // Calculate size with pulsing effect
+        let sizeMultiplier = 0.5 + 0.5 * sin(time * animationSpeed * config.sizeFrequency + config.sizePhase)
+        let size = config.baseSize * (0.5 + sizeMultiplier)
+
+        // Calculate opacity (always visible but varies)
+        let opacity = 0.4 + 0.6 * sizeMultiplier
+
+        return (position, size, opacity)
+    }
+}
 
 extension DynamicBubble {
     private func calculateRadii(at time: Double) -> [CGFloat] {
