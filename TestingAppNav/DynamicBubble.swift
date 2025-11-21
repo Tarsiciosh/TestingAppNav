@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BioAgeBubble: View {
+struct DynamicBubble: View {
     @State private var time: Double = 0
     var maxDelta: CGFloat = 0.04
     var animationSpeed: Double = 1.5
@@ -53,7 +53,7 @@ struct BioAgeBubble: View {
     }
 }
 
-extension BioAgeBubble {
+extension DynamicBubble {
     private func calculateRadii(at time: Double) -> [CGFloat] {
         return (0..<numberOfPoints).map { i in
             let phase = phaseOffsets[i]
@@ -64,7 +64,7 @@ extension BioAgeBubble {
     }
 }
 
-extension BioAgeBubble {
+extension DynamicBubble {
     func createSmoothPath(center: CGPoint, radii: [CGFloat]) -> Path {
         let points = calculatePoints(center: center, radii: radii)
 
@@ -100,7 +100,7 @@ extension BioAgeBubble {
     }
 }
 
-extension BioAgeBubble {
+extension DynamicBubble {
     func calculatePoints(center: CGPoint, radii: [CGFloat]) -> [CGPoint] {
         var points: [CGPoint] = []
 
@@ -125,9 +125,122 @@ extension Path {
     }
 }
 
+struct BubbleView: View {
+    let bubble: Bubble
+    let color: Color
+    
+    var body: some View {
+        Circle()
+            .fill(color.opacity(0.3))
+            .frame(width: bubble.size, height: bubble.size)
+            .scaleEffect(bubble.scale)
+            .opacity(bubble.opacity)
+            .position(x: bubble.x, y: bubble.y)
+    }
+}
+
+struct Bubble: Identifiable {
+    let id = UUID()
+    var x: CGFloat
+    var y: CGFloat
+    var size: CGFloat
+    var opacity: Double
+    var speed: CGFloat
+    var scale: CGFloat
+    
+    init(containerSize: CGSize, percentage: Double, animationProgress: CGFloat) {
+        self.x = CGFloat.random(in: 0...containerSize.width)
+        self.y = containerSize.height - CGFloat.random(in: 15...20)
+        self.size = CGFloat.random(in: 3...8)
+        self.opacity = 0.0
+        self.speed = CGFloat.random(in: 0.5...2.0)
+        self.scale = CGFloat.random(in: 0.8...1.2)
+    }
+}
+
+struct AnimatedBubbleView: View {
+    let containerSize: CGSize
+    let percentage: Double
+    let animationProgress: CGFloat
+    let color: Color
+    
+    @State private var bubbles: [Bubble] = []
+    @State private var timer: Timer?
+    @State private var animationTimer: Timer?
+    @State private var hasAnimated: Bool = false
+    
+    var body: some View {
+        ZStack {
+            ForEach(bubbles) { bubble in
+                BubbleView(bubble: bubble, color: color)
+            }
+        }
+        .onAppear {
+            if !hasAnimated {
+                hasAnimated = true
+                startBubbleAnimation()
+            }
+        }
+        .onDisappear {
+            timer?.invalidate()
+        }
+    }
+    
+    private func startBubbleAnimation() {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            addBubble()
+            updateBubbles()
+        }
+        
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+            timer?.invalidate()
+            timer = nil
+            
+            // Fade out all bubbles
+            withAnimation(.easeOut(duration: 0.5)) {
+                for i in bubbles.indices {
+                    bubbles[i].opacity = 0.0
+                }
+            }
+        
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                bubbles.removeAll()
+            }
+        }
+    }
+    
+    private func addBubble() {
+        guard percentage > 0 else { return }
+        
+        let newBubble = Bubble(containerSize: containerSize, percentage: percentage + 30, animationProgress: animationProgress)
+        bubbles.append(newBubble)
+        
+        withAnimation(.easeIn(duration: 0.01)) {
+            if let index = bubbles.firstIndex(where: { $0.id == newBubble.id }) {
+                bubbles[index].opacity = 0.8
+            }
+        }
+    }
+
+    private func updateBubbles() {
+        for i in bubbles.indices.reversed() {
+            bubbles[i].y -= bubbles[i].speed * 2
+            
+            if bubbles[i].y <= 0 || bubbles[i].opacity < 0.05 {
+                bubbles.remove(at: i)
+            }
+        }
+        
+        if bubbles.count > 20 {
+            bubbles.removeFirst()
+        }
+    }
+}
+
+
 #Preview {
     Group {
-        BioAgeBubble()
+        DynamicBubble()
     }
     .background(.black)
 }
