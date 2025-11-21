@@ -20,16 +20,30 @@ struct DynamicBubble: View {
     let baseRadius: CGFloat = 100
 
     // Mini bubble constraints
-    var miniBubbleMinRadius: CGFloat = 70
-    var miniBubbleMaxRadius: CGFloat = 90
+    var miniBubbleMinRadius: CGFloat { baseRadius * 0.8 }
+    var miniBubbleMaxRadius: CGFloat { baseRadius * 0.9 }
 
-    // Mini bubble configurations - each has unique movement pattern
     let miniBubbles: [MiniBubbleConfig] = [
-        MiniBubbleConfig(phaseX: 0.0, phaseY: 1.5, frequencyX: 0.8, frequencyY: 1.1, sizePhase: 0.0, sizeFrequency: 1.3, baseSize: 6, color: .green),
-        MiniBubbleConfig(phaseX: 2.1, phaseY: 0.3, frequencyX: 1.2, frequencyY: 0.7, sizePhase: 1.2, sizeFrequency: 0.9, baseSize: 4, color: .green),
-        MiniBubbleConfig(phaseX: 1.0, phaseY: 2.8, frequencyX: 0.6, frequencyY: 1.4, sizePhase: 2.5, sizeFrequency: 1.1, baseSize: 5, color: .green),
-        MiniBubbleConfig(phaseX: 3.5, phaseY: 1.2, frequencyX: 1.0, frequencyY: 0.9, sizePhase: 0.8, sizeFrequency: 1.5, baseSize: 2, color: .green),
-        MiniBubbleConfig(phaseX: 0.7, phaseY: 3.2, frequencyX: 0.9, frequencyY: 1.3, sizePhase: 3.1, sizeFrequency: 0.7, baseSize: 1, color: .green),
+        MiniBubbleConfig(phaseX: 3.50, phaseY: 1.75, frequencyX: 0.03, frequencyY: 0.7, sizePhase: 2.1, sizeFrequency: 1.0, baseSize: 2.4, color: .green),
+        MiniBubbleConfig(phaseX: 3.29, phaseY: 2.36, frequencyX: 0.02, frequencyY: 0.5, sizePhase: 1.0, sizeFrequency: 1.3, baseSize: 1.8, color: .green),
+        MiniBubbleConfig(phaseX: 2.87, phaseY: 2.91, frequencyX: 0.05, frequencyY: 0.6, sizePhase: 2.7, sizeFrequency: 0.9, baseSize: 3.1, color: .green),
+        MiniBubbleConfig(phaseX: 2.27, phaseY: 3.30, frequencyX: 0.01, frequencyY: 0.4, sizePhase: 0.9, sizeFrequency: 1.4, baseSize: 2.0, color: .green),
+        MiniBubbleConfig(phaseX: 1.55, phaseY: 3.49, frequencyX: 0.04, frequencyY: 0.8, sizePhase: 3.0, sizeFrequency: 1.2, baseSize: 1.6, color: .green),
+        MiniBubbleConfig(phaseX: 0.82, phaseY: 3.45, frequencyX: 0.02, frequencyY: 0.3, sizePhase: 2.4, sizeFrequency: 1.5, baseSize: 2.8, color: .green),
+        MiniBubbleConfig(phaseX: 0.19, phaseY: 3.18, frequencyX: 0.06, frequencyY: 0.9, sizePhase: 1.3, sizeFrequency: 1.1, baseSize: 1.3, color: .green),
+        MiniBubbleConfig(phaseX: 0.00, phaseY: 2.70, frequencyX: 0.03, frequencyY: 0.6, sizePhase: 2.8, sizeFrequency: 1.4, baseSize: 3.3, color: .green),
+        MiniBubbleConfig(phaseX: 0.12, phaseY: 2.10, frequencyX: 0.07, frequencyY: 0.5, sizePhase: 0.7, sizeFrequency: 1.0, baseSize: 2.1, color: .green),
+        MiniBubbleConfig(phaseX: 0.53, phaseY: 1.55, frequencyX: 0.02, frequencyY: 0.7, sizePhase: 3.1, sizeFrequency: 1.3, baseSize: 2.6, color: .green),
+
+        MiniBubbleConfig(phaseX: 1.11, phaseY: 1.16, frequencyX: 0.05, frequencyY: 0.4, sizePhase: 1.8, sizeFrequency: 0.9, baseSize: 1.7, color: .green),
+        MiniBubbleConfig(phaseX: 1.80, phaseY: 0.97, frequencyX: 0.03, frequencyY: 0.8, sizePhase: 2.3, sizeFrequency: 1.2, baseSize: 2.9, color: .green),
+        MiniBubbleConfig(phaseX: 2.50, phaseY: 1.00, frequencyX: 0.01, frequencyY: 0.6, sizePhase: 3.2, sizeFrequency: 1.5, baseSize: 3.4, color: .green),
+        MiniBubbleConfig(phaseX: 3.10, phaseY: 1.28, frequencyX: 0.06, frequencyY: 0.7, sizePhase: 1.2, sizeFrequency: 1.0, baseSize: 1.4, color: .green),
+        MiniBubbleConfig(phaseX: 3.47, phaseY: 1.76, frequencyX: 0.04, frequencyY: 0.9, sizePhase: 2.9, sizeFrequency: 1.4, baseSize: 2.2, color: .green),
+        MiniBubbleConfig(phaseX: 3.58, phaseY: 2.35, frequencyX: 0.03, frequencyY: 0.3, sizePhase: 1.7, sizeFrequency: 1.1, baseSize: 1.2, color: .green),
+        MiniBubbleConfig(phaseX: 3.41, phaseY: 2.94, frequencyX: 0.05, frequencyY: 0.8, sizePhase: 2.1, sizeFrequency: 1.4, baseSize: 2.7, color: .green),
+        MiniBubbleConfig(phaseX: 3.00, phaseY: 3.40, frequencyX: 0.02, frequencyY: 0.5, sizePhase: 3.0, sizeFrequency: 0.7, baseSize: 1.9, color: .green),
+        MiniBubbleConfig(phaseX: 2.39, phaseY: 3.67, frequencyX: 0.07, frequencyY: 0.2, sizePhase: 1.4, sizeFrequency: 1.2, baseSize: 3.2, color: .green)
     ]
 
     // Random phase offsets for each point to create organic movement
@@ -103,20 +117,13 @@ extension DynamicBubble {
     }
 
     func calculateMiniBubbleValues(at time: Double, config: MiniBubbleConfig, center: CGPoint) -> (CGPoint, Double, Double) {
-        // Calculate normalized position using sin waves (range -1 to 1)
-        let normalizedX = sin(time * animationSpeed * config.frequencyX + config.phaseX)
-        let normalizedY = sin(time * animationSpeed * config.frequencyY + config.phaseY)
+        // Continuous forward angle movement (always increasing)
+        let angle = time * animationSpeed * config.frequencyX + config.phaseX
 
-        // Map the normalized values to radius range
+        // Radius varies smoothly between min and max using sin wave
         let radiusRange = miniBubbleMaxRadius - miniBubbleMinRadius
-
-        // Convert to polar-ish coordinates for more natural circular movement
-        let angle = atan2(normalizedY, normalizedX)
-        let normalizedDistance = sqrt(normalizedX * normalizedX + normalizedY * normalizedY)
-        let clampedDistance = min(normalizedDistance, 1.0) // Clamp to unit circle
-
-        // Map distance to min/max radius
-        let radius = miniBubbleMinRadius + (clampedDistance * radiusRange)
+        let radiusNormalized = 0.5 + 0.5 * sin(time * animationSpeed * config.frequencyY + config.phaseY)
+        let radius = miniBubbleMinRadius + (CGFloat(radiusNormalized) * radiusRange)
 
         // Calculate final position relative to center
         let position = CGPoint(
@@ -131,7 +138,22 @@ extension DynamicBubble {
         // Calculate opacity (always visible but varies)
         let opacity = 0.4 + 0.6 * sizeMultiplier
 
-        return (position, size, opacity)
+        return (position, size, opacity * 0.7)
+    }
+    
+    func generateMiniBubbles(count: Int, color: Color = .green) -> [MiniBubbleConfig] {
+        (0..<count).map { _ in
+            MiniBubbleConfig(
+                phaseX: Double.random(in: 0.0...3.5),
+                phaseY: Double.random(in: 0.0...3.5),
+                frequencyX: Double.random(in: 0.01...0.08),
+                frequencyY: Double.random(in: 0.1...1.0),
+                sizePhase: Double.random(in: 0.0...3.5),
+                sizeFrequency: Double.random(in: 0.7...1.5),
+                baseSize: Double.random(in: 1.0...3.5),
+                color: color
+            )
+        }
     }
 }
 
@@ -325,3 +347,18 @@ extension Path {
      }
  }
  */
+
+/*
+ let miniBubbles = [
+     MiniBubbleConfig(phaseX: 0.0, phaseY: 1.5, frequencyX: 0.01, frequencyY: 0.1, sizePhase: 0.0, sizeFrequency: 1.3, baseSize: 3, color: .green),
+     MiniBubbleConfig(phaseX: 2.1, phaseY: 0.3, frequencyX: 0.01, frequencyY: 0.7, sizePhase: 1.2, sizeFrequency: 0.9, baseSize: 2.2, color: .green),
+     MiniBubbleConfig(phaseX: 1.0, phaseY: 2.8, frequencyX: 0.06, frequencyY: 0.4, sizePhase: 2.5, sizeFrequency: 1.1, baseSize: 3.2, color: .green),
+     MiniBubbleConfig(phaseX: 3.5, phaseY: 1.2, frequencyX: 0.02, frequencyY: 0.9, sizePhase: 0.8, sizeFrequency: 1.5, baseSize: 2, color: .green),
+     MiniBubbleConfig(phaseX: 0.7, phaseY: 3.2, frequencyX: 0.05, frequencyY: 0.3, sizePhase: 3.1, sizeFrequency: 0.7, baseSize: 1, color: .green),
+     MiniBubbleConfig(phaseX: 0.3, phaseY: 1.5, frequencyX: 0.03, frequencyY: 0.1, sizePhase: 0.0, sizeFrequency: 1.3, baseSize: 1.5, color: .green),
+     MiniBubbleConfig(phaseX: 1.3, phaseY: 0.3, frequencyX: 0.08, frequencyY: 0.7, sizePhase: 1.2, sizeFrequency: 0.9, baseSize: 3.1, color: .green),
+     MiniBubbleConfig(phaseX: 2.4, phaseY: 2.8, frequencyX: 0.03, frequencyY: 0.4, sizePhase: 2.5, sizeFrequency: 1.1, baseSize: 3.5, color: .green),
+     MiniBubbleConfig(phaseX: 3.1, phaseY: 1.2, frequencyX: 0.01, frequencyY: 0.9, sizePhase: 0.8, sizeFrequency: 1.5, baseSize: 2, color: .green),
+     MiniBubbleConfig(phaseX: 2.7, phaseY: 3.2, frequencyX: 0.04, frequencyY: 0.3, sizePhase: 3.1, sizeFrequency: 0.7, baseSize: 1, color: .green),
+ ]
+*/
