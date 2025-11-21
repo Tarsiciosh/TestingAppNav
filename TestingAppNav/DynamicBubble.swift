@@ -1,57 +1,58 @@
 import SwiftUI
 
 struct DynamicBubble: View {
+    var mainColor: Color = Color.green
+   
     @State private var time: Double = 0
-    var maxDelta: CGFloat = 0.04
+    var maxDelta: CGFloat = 0.03
     var animationSpeed: Double = 1.5
-    let baseRadius: CGFloat = 80
+    let baseRadius: CGFloat = 100
 
     // Random phase offsets for each point to create organic movement
-    let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]//, 0, 3.5, 1.2, 0.3, 1.7, 0.9, 3.1]
-    let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]//, 1.1, 0.8, 0.5, 1.3, 0.65, 1.3, 0.6]
+    let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]
+    let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]
 
     var numberOfPoints: Int { phaseOffsets.count }
-    
-    var outerRingColor: Color { Color(red: 0.2, green: 1.0, blue: 0.3) }
 
     var body: some View {
         TimelineView(.animation) { timeline in
             Canvas { context, size in
                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
 
-                // Calculate current radii based on time
                 let currentRadii = calculateRadii(at: timeline.date.timeIntervalSinceReferenceDate)
 
-                // Create base path
-                let basePath = createSmoothPath(center: center, radii: currentRadii)
+                let outerPath = createSmoothPath(center: center, radii: currentRadii)
 
-                let innerScale: CGFloat = 0.5
-                let lineWidth: CGFloat = 2
+                let innerScale: CGFloat = 0.6
 
-                // Calculate number of layers based on ring width and line width
-                let ringWidth = baseRadius * (1.0 - innerScale)
-                let numberOfLayers = Int(ceil(ringWidth / lineWidth * 1.01))  //multiplier for overlap
-                for i in 0..<numberOfLayers {
-                    // Calculate scale for this layer (from 1.0 to innerScale)
-                    let t = CGFloat(i) / CGFloat(numberOfLayers)
-                    let scale = 1.0 - (t * (1.0 - innerScale))
+                // Calculate mean radius
+                let meanRadius = currentRadii.reduce(0, +) / CGFloat(currentRadii.count)
+                let dynamicStartRadius = baseRadius * meanRadius * innerScale
 
-                    // Calculate opacity (decrease as we go inward)
-                    let opacity = 1 - t  // From 1.0 to 0.0
+                // Add smooth random variation using time-based noise
+                let time = timeline.date.timeIntervalSinceReferenceDate
+                let randomVariation1 = sin(time * 2.5) * 2  // Smooth oscillation for inner radius
 
-                    // Create scaled path
-                    let layerPath = basePath.with(scale: scale, center: center)
+                let gradient = Gradient(colors: [
+                    mainColor.opacity(0),
+                    mainColor.opacity(0.2),
+                    mainColor.opacity(0.5),
+                    mainColor.opacity(0.8)
+                ])
 
-                    // Stroke with green at calculated opacity
-                    context.stroke(layerPath, with: .color(.green.opacity(opacity)), lineWidth: lineWidth)
-                }
+                context.fill(outerPath, with: .radialGradient(
+                    gradient,
+                    center: center,
+                    startRadius: dynamicStartRadius + randomVariation1,
+                    endRadius: baseRadius * meanRadius
+                ))
                 
-                let outerPath = basePath.with(scale: 1, center: center)
-                context.stroke(outerPath, with: .color(outerRingColor), lineWidth: lineWidth)
+                context.stroke(outerPath, with: .color(mainColor), lineWidth: 2)
             }
         }
     }
 }
+
 
 extension DynamicBubble {
     private func calculateRadii(at time: Double) -> [CGFloat] {
@@ -302,3 +303,57 @@ struct AnimatedBubbleView: View {
  }
 */
 
+/* INNER TO OUTER RINGS
+ struct DynamicBubble: View {
+     @State private var time: Double = 0
+     var maxDelta: CGFloat = 0.04
+     var animationSpeed: Double = 1.5
+     let baseRadius: CGFloat = 80
+
+     // Random phase offsets for each point to create organic movement
+     let phaseOffsets: [Double] = [0, 1.2, 2.5, 0.8, 3.1, 1.7, 2.9]//, 0, 3.5, 1.2, 0.3, 1.7, 0.9, 3.1]
+     let frequencies: [Double] = [1.0, 1.3, 0.9, 1.1, 0.85, 1.15, 0.95]//, 1.1, 0.8, 0.5, 1.3, 0.65, 1.3, 0.6]
+
+     var numberOfPoints: Int { phaseOffsets.count }
+     
+     var outerRingColor: Color { Color(red: 0.2, green: 1.0, blue: 0.3) }
+
+     var body: some View {
+         TimelineView(.animation) { timeline in
+             Canvas { context, size in
+                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
+
+                 // Calculate current radii based on time
+                 let currentRadii = calculateRadii(at: timeline.date.timeIntervalSinceReferenceDate)
+
+                 // Create base path
+                 let basePath = createSmoothPath(center: center, radii: currentRadii)
+
+                 let innerScale: CGFloat = 0.5
+                 let lineWidth: CGFloat = 2
+
+                 // Calculate number of layers based on ring width and line width
+                 let ringWidth = baseRadius * (1.0 - innerScale)
+                 let numberOfLayers = Int(ceil(ringWidth / lineWidth * 1.01))  //multiplier for overlap
+                 for i in 0..<numberOfLayers {
+                     // Calculate scale for this layer (from 1.0 to innerScale)
+                     let t = CGFloat(i) / CGFloat(numberOfLayers)
+                     let scale = 1.0 - (t * (1.0 - innerScale))
+
+                     // Calculate opacity (decrease as we go inward)
+                     let opacity = 1 - t  // From 1.0 to 0.0
+
+                     // Create scaled path
+                     let layerPath = basePath.with(scale: scale, center: center)
+
+                     // Stroke with green at calculated opacity
+                     context.stroke(layerPath, with: .color(.green.opacity(opacity)), lineWidth: lineWidth)
+                 }
+                 
+                 let outerPath = basePath.with(scale: 1, center: center)
+                 context.stroke(outerPath, with: .color(outerRingColor), lineWidth: lineWidth)
+             }
+         }
+     }
+ }
+ */
