@@ -119,41 +119,26 @@ extension DynamicBubble {
     func calculateMiniBubbleValues(at time: Double, config: MiniBubbleConfig, center: CGPoint) -> (CGPoint, Double, Double) {
         // Continuous forward angle movement (always increasing)
         let angle = time * animationSpeed * config.frequencyX + config.phaseX
-
+        
         // Radius varies smoothly between min and max using sin wave
         let radiusRange = miniBubbleMaxRadius - miniBubbleMinRadius
         let radiusNormalized = 0.5 + 0.5 * sin(time * animationSpeed * config.frequencyY + config.phaseY)
         let radius = miniBubbleMinRadius + (CGFloat(radiusNormalized) * radiusRange)
-
+        
         // Calculate final position relative to center
         let position = CGPoint(
             x: center.x + CGFloat(cos(angle)) * radius,
             y: center.y + CGFloat(sin(angle)) * radius
         )
-
+        
         // Calculate size with pulsing effect
         let sizeMultiplier = 0.5 + 0.5 * sin(time * animationSpeed * config.sizeFrequency + config.sizePhase)
         let size = config.baseSize * (0.5 + sizeMultiplier)
-
+        
         // Calculate opacity (always visible but varies)
-        let opacity = 0.4 + 0.6 * sizeMultiplier
-
-        return (position, size, opacity * 0.7)
-    }
-    
-    func generateMiniBubbles(count: Int, color: Color = .green) -> [MiniBubbleConfig] {
-        (0..<count).map { _ in
-            MiniBubbleConfig(
-                phaseX: Double.random(in: 0.0...3.5),
-                phaseY: Double.random(in: 0.0...3.5),
-                frequencyX: Double.random(in: 0.01...0.08),
-                frequencyY: Double.random(in: 0.1...1.0),
-                sizePhase: Double.random(in: 0.0...3.5),
-                sizeFrequency: Double.random(in: 0.7...1.5),
-                baseSize: Double.random(in: 1.0...3.5),
-                color: color
-            )
-        }
+        let opacity = 0.4 + 0.2 * sizeMultiplier
+        
+        return (position, size, opacity)
     }
 }
 
