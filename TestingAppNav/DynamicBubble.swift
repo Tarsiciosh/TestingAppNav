@@ -48,8 +48,18 @@ struct DynamicBubble: View {
                 ))
                 
                 context.stroke(outerPath, with: .color(mainColor), lineWidth: 2)
+                
+                addMiniBubbleIn(context: context, position: center, size: 10, color: .gray, opacity: 1)
             }
         }
+    }
+}
+
+extension DynamicBubble {
+    func addMiniBubbleIn(context: GraphicsContext, position: CGPoint, size: Double, color: Color, opacity: Double) {
+        var bubblePath = Path()
+        bubblePath.addEllipse(in: CGRect(origin: position, size: CGSize(width: size, height: size)))
+        context.fill(bubblePath, with: .color(color.opacity(opacity)))
     }
 }
 
