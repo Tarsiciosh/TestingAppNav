@@ -16,34 +16,34 @@ struct DynamicBubble: View {
 
     @State private var time: Double = 0
     var maxDelta: CGFloat = 0.03
-    var animationSpeed: Double = 1.5
+    var animationSpeed: Double = 2.25
     let baseRadius: CGFloat = 100
 
     // Mini bubble constraints
     var miniBubbleMinRadius: CGFloat { baseRadius * 0.8 }
-    var miniBubbleMaxRadius: CGFloat { baseRadius * 0.9 }
+    var miniBubbleMaxRadius: CGFloat { baseRadius * 0.92 }
 
     var miniBubbles: [MiniBubbleConfig] { [
-        MiniBubbleConfig(baseSize: 2.4, frequencyAlpha: 0.003, phaseAlpha: 0.00, frequencyRho: 0.7, phaseRho: 1.75, sizeFrequency: 1.0, sizePhase: 2.1, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.8, frequencyAlpha: 0.002, phaseAlpha: 0.31, frequencyRho: 0.5, phaseRho: 2.36, sizeFrequency: 1.3, sizePhase: 1.0, color: mainColor),
-        MiniBubbleConfig(baseSize: 3.1, frequencyAlpha: 0.005, phaseAlpha: 0.62, frequencyRho: 0.6, phaseRho: 2.91, sizeFrequency: 0.9, sizePhase: 2.7, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.0, frequencyAlpha: 0.001, phaseAlpha: 0.94, frequencyRho: 0.4, phaseRho: 3.30, sizeFrequency: 1.4, sizePhase: 0.9, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.6, frequencyAlpha: 0.004, phaseAlpha: 1.25, frequencyRho: 0.8, phaseRho: 3.49, sizeFrequency: 1.2, sizePhase: 3.0, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.8, frequencyAlpha: 0.002, phaseAlpha: 1.57, frequencyRho: 0.3, phaseRho: 3.45, sizeFrequency: 1.5, sizePhase: 2.4, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.3, frequencyAlpha: 0.006, phaseAlpha: 1.88, frequencyRho: 0.9, phaseRho: 3.18, sizeFrequency: 1.1, sizePhase: 1.3, color: mainColor),
-        MiniBubbleConfig(baseSize: 3.3, frequencyAlpha: 0.003, phaseAlpha: 2.19, frequencyRho: 0.6, phaseRho: 2.70, sizeFrequency: 1.4, sizePhase: 2.8, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.1, frequencyAlpha: 0.007, phaseAlpha: 2.51, frequencyRho: 0.5, phaseRho: 2.10, sizeFrequency: 1.0, sizePhase: 0.7, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.6, frequencyAlpha: 0.002, phaseAlpha: 2.82, frequencyRho: 0.7, phaseRho: 1.55, sizeFrequency: 1.3, sizePhase: 3.1, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.7, frequencyAlpha: 0.005, phaseAlpha: 3.14, frequencyRho: 0.4, phaseRho: 1.16, sizeFrequency: 0.9, sizePhase: 1.8, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.9, frequencyAlpha: 0.003, phaseAlpha: 3.45, frequencyRho: 0.8, phaseRho: 0.97, sizeFrequency: 1.2, sizePhase: 2.3, color: mainColor),
-        MiniBubbleConfig(baseSize: 3.4, frequencyAlpha: 0.001, phaseAlpha: 3.76, frequencyRho: 0.6, phaseRho: 1.00, sizeFrequency: 1.5, sizePhase: 3.2, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.4, frequencyAlpha: 0.006, phaseAlpha: 4.08, frequencyRho: 0.7, phaseRho: 1.28, sizeFrequency: 1.0, sizePhase: 1.2, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.2, frequencyAlpha: 0.004, phaseAlpha: 4.39, frequencyRho: 0.9, phaseRho: 1.76, sizeFrequency: 1.4, sizePhase: 2.9, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.2, frequencyAlpha: 0.003, phaseAlpha: 4.71, frequencyRho: 0.3, phaseRho: 2.35, sizeFrequency: 1.1, sizePhase: 1.7, color: mainColor),
-        MiniBubbleConfig(baseSize: 2.7, frequencyAlpha: 0.005, phaseAlpha: 5.02, frequencyRho: 0.8, phaseRho: 2.94, sizeFrequency: 1.4, sizePhase: 2.1, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.9, frequencyAlpha: 0.002, phaseAlpha: 5.34, frequencyRho: 0.5, phaseRho: 3.40, sizeFrequency: 0.7, sizePhase: 3.0, color: mainColor),
-        MiniBubbleConfig(baseSize: 3.2, frequencyAlpha: 0.007, phaseAlpha: 5.65, frequencyRho: 0.2, phaseRho: 3.67, sizeFrequency: 1.2, sizePhase: 1.4, color: mainColor),
-        MiniBubbleConfig(baseSize: 1.2, frequencyAlpha: 0.005, phaseAlpha: 6.20, frequencyRho: 0.5, phaseRho: 2.67, sizeFrequency: 2.2, sizePhase: 1.2, color: mainColor)
+        MiniBubbleConfig(baseSize: 2.4, frequencyAlpha: 0.01, phaseAlpha: 0.00, frequencyRho: 0.7, phaseRho: 1.75, sizeFrequency: 1.0, sizePhase: 2.1, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.8, frequencyAlpha: 0.02, phaseAlpha: 0.31, frequencyRho: 0.5, phaseRho: 2.36, sizeFrequency: 1.3, sizePhase: 1.0, color: mainColor),
+        MiniBubbleConfig(baseSize: 3.1, frequencyAlpha: 0.03, phaseAlpha: 0.62, frequencyRho: 0.6, phaseRho: 2.91, sizeFrequency: 0.9, sizePhase: 2.7, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.0, frequencyAlpha: 0.01, phaseAlpha: 0.94, frequencyRho: 0.4, phaseRho: 3.30, sizeFrequency: 1.4, sizePhase: 0.9, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.6, frequencyAlpha: 0.02, phaseAlpha: 1.25, frequencyRho: 0.8, phaseRho: 3.49, sizeFrequency: 1.2, sizePhase: 3.0, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.8, frequencyAlpha: 0.01, phaseAlpha: 1.57, frequencyRho: 0.3, phaseRho: 3.45, sizeFrequency: 1.5, sizePhase: 2.4, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.3, frequencyAlpha: 0.015, phaseAlpha: 1.88, frequencyRho: 0.9, phaseRho: 3.18, sizeFrequency: 1.1, sizePhase: 1.3, color: mainColor),
+        MiniBubbleConfig(baseSize: 3.3, frequencyAlpha: 0.023, phaseAlpha: 2.19, frequencyRho: 0.6, phaseRho: 2.70, sizeFrequency: 1.4, sizePhase: 2.8, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.1, frequencyAlpha: 0.01, phaseAlpha: 2.51, frequencyRho: 0.5, phaseRho: 2.10, sizeFrequency: 1.0, sizePhase: 0.7, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.6, frequencyAlpha: 0.01, phaseAlpha: 2.82, frequencyRho: 0.7, phaseRho: 1.55, sizeFrequency: 1.3, sizePhase: 3.1, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.7, frequencyAlpha: 0.05, phaseAlpha: 3.14, frequencyRho: 0.4, phaseRho: 1.16, sizeFrequency: 0.9, sizePhase: 1.8, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.9, frequencyAlpha: 0.03, phaseAlpha: 3.45, frequencyRho: 0.8, phaseRho: 0.97, sizeFrequency: 1.2, sizePhase: 2.3, color: mainColor),
+        MiniBubbleConfig(baseSize: 3.4, frequencyAlpha: 0.01, phaseAlpha: 3.76, frequencyRho: 0.6, phaseRho: 1.00, sizeFrequency: 1.5, sizePhase: 3.2, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.4, frequencyAlpha: 0.06, phaseAlpha: 4.08, frequencyRho: 0.7, phaseRho: 1.28, sizeFrequency: 1.0, sizePhase: 1.2, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.2, frequencyAlpha: 0.04, phaseAlpha: 4.39, frequencyRho: 0.9, phaseRho: 1.76, sizeFrequency: 1.4, sizePhase: 2.9, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.2, frequencyAlpha: 0.03, phaseAlpha: 4.71, frequencyRho: 0.3, phaseRho: 2.35, sizeFrequency: 1.1, sizePhase: 1.7, color: mainColor),
+        MiniBubbleConfig(baseSize: 2.7, frequencyAlpha: 0.05, phaseAlpha: 5.02, frequencyRho: 0.8, phaseRho: 2.94, sizeFrequency: 1.4, sizePhase: 2.1, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.9, frequencyAlpha: 0.02, phaseAlpha: 5.34, frequencyRho: 0.5, phaseRho: 3.40, sizeFrequency: 0.7, sizePhase: 3.0, color: mainColor),
+        MiniBubbleConfig(baseSize: 3.2, frequencyAlpha: 0.07, phaseAlpha: 5.65, frequencyRho: 0.2, phaseRho: 3.67, sizeFrequency: 1.2, sizePhase: 1.4, color: mainColor),
+        MiniBubbleConfig(baseSize: 1.2, frequencyAlpha: 0.05, phaseAlpha: 6.20, frequencyRho: 0.5, phaseRho: 2.67, sizeFrequency: 2.2, sizePhase: 1.2, color: mainColor)
     ]}
 
     // Random phase offsets for each point to create organic movement
@@ -85,7 +85,7 @@ struct DynamicBubble: View {
                     endRadius: baseRadius * meanRadius
                 ))
                 
-                context.stroke(outerPath, with: .color(mainColor), lineWidth: 2)
+                context.stroke(outerPath, with: .color(mainColor), lineWidth: 1.5)
 
                 // Draw all mini bubbles
                 let currentTime = timeline.date.timeIntervalSinceReferenceDate
