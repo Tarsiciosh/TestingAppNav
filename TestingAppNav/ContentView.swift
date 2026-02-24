@@ -16,6 +16,18 @@ struct ContentView: View {
     let trackHeight: CGFloat = 14.0
     
     var score: Double? = nil
+    
+    let greenGradient = LinearGradient(
+        colors: [Color.green.opacity(0.4), Color.green],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+
+    let redGradient = LinearGradient(
+        colors: [Color.red.opacity(0.4), Color.red],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
 
     var body: some View {
         GeometryReader { geo in
@@ -43,7 +55,7 @@ struct ContentView: View {
                         .frame(width: unitWidth * sideProportion)
                     
                     Capsule()
-                        .fill(Color.gray.opacity(0.5))
+                        .fill(greenGradient/*Color.gray.opacity(0.5)*/)
                         .frame(width: unitWidth * centerProportion)
                     
                     Capsule()
