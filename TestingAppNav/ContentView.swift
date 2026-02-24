@@ -12,6 +12,8 @@ struct ContentView: View {
     
     private let sideProportion: CGFloat = 0.5
     private let centerProportion: CGFloat = 1.0
+    
+    let trackHeight: CGFloat = 14.0
 
     var body: some View {
         GeometryReader { geo in
@@ -21,39 +23,48 @@ struct ContentView: View {
             let availableWidth = geo.size.width - totalSpacing
             let unitWidth = availableWidth / totalProportions
 
-            HStack(spacing: spacing) {
-                Capsule()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: unitWidth * sideProportion)
-
-                Capsule()
-                    .fill(Color.green.opacity(0.6))
-                    .overlay(alignment: .trailing) {
-                        Circle()
-                            .fill(Color.white)
-                            .padding(4)
-                            .overlay {
-                                Circle()
-                                    .strokeBorder(Color.gray, lineWidth: 3)
-                                    .padding(7)
-                            }
-                    }
-                    .frame(width: unitWidth * centerProportion)
-
-                Capsule()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(width: unitWidth * sideProportion)
+            ZStack {
+                // background track
+                HStack(spacing: spacing) {
+                    Capsule()
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: unitWidth * sideProportion)
+                    
+                    Capsule()
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: unitWidth * centerProportion)
+                    
+                    Capsule()
+                        .fill(Color.gray.opacity(0.5))
+                        .frame(width: unitWidth * sideProportion)
+                }
+                .frame(height: trackHeight)
+                
+                //
+                ZStack(alignment: .center) {
+                    Circle()
+                        .fill(Color.black.opacity(0.05))
+                        .frame(width: 30, height: 30)
+                    
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 22, height: 22)
+                    
+                    Circle()
+                        .fill(Color.white.opacity(1))
+                        .frame(width: trackHeight, height: 22)
+                    
+                    Circle()
+                        .fill(Color.green.opacity(1))
+                        .frame(width: trackHeight, height: 8)
+                }
+                .offset(x: -70)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(height: 44)
+        .frame(height: 30)
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(white: 0.15))
-        )
-        .padding()
     }
 }
 
