@@ -14,6 +14,8 @@ struct ContentView: View {
     private let centerProportion: CGFloat = 1.0
     
     let trackHeight: CGFloat = 14.0
+    
+    var score: Double? = nil
 
     var body: some View {
         GeometryReader { geo in
@@ -22,6 +24,16 @@ struct ContentView: View {
             let totalSpacing = spacing * 2
             let availableWidth = geo.size.width - totalSpacing
             let unitWidth = availableWidth / totalProportions
+            
+            let middleOffset = geo.size.width / 2
+            let middleMarker = trackHeight / 2
+            
+            let pill1Low = middleMarker - middleOffset
+            let pill1High = (unitWidth * sideProportion) - middleMarker - middleOffset
+            let pill2Low = (unitWidth * sideProportion) + spacing + middleMarker - middleOffset
+            let pill2High = (unitWidth * sideProportion) + spacing + (unitWidth * centerProportion) - middleMarker - middleOffset
+            let pill3Low = (unitWidth * sideProportion) + spacing + (unitWidth * centerProportion) + spacing + middleMarker - middleOffset
+            let pill3High = middleOffset - middleMarker
 
             ZStack {
                 // background track
@@ -40,7 +52,7 @@ struct ContentView: View {
                 }
                 .frame(height: trackHeight)
                 
-                //
+                // marker
                 ZStack(alignment: .center) {
                     Circle()
                         .fill(Color.black.opacity(0.05))
@@ -58,13 +70,11 @@ struct ContentView: View {
                         .fill(Color.green.opacity(1))
                         .frame(width: trackHeight, height: 8)
                 }
-                .offset(x: -70)
+                .offset(x: pill3High)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(height: 30)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
     }
 }
 
