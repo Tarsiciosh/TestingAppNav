@@ -10,14 +10,14 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         ZStack {
-            StrainRangeSlider(value: 45, targetMin: 40, targetMax: 49)
+            StrainRangeArcSlider(value: 20, targetMin: 10, targetMax: 30)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
         .ignoresSafeArea()
     }
     
-    struct StrainRangeSlider: View {
+    struct StrainRangeArcSlider: View {
         let value: Double
         let targetMin: Double
         let targetMax: Double
@@ -25,14 +25,19 @@ struct ContentView: View {
         private let minValue: Double = 0
         private let maxValue: Double = 100
         private let trackLineWidth: CGFloat = 5
-        private let sweepAngle: Double = 130 // total arc sweep in degrees (< 180 for a shorter arc)
+        private let sweepAngle: Double = 120 // total arc sweep in degrees (< 180 for a shorter arc)
 
         var body: some View {
-            let arcPadding: CGFloat = 30
+            let arcPadding: CGFloat = 42
             VStack(spacing: 0) {
                 GeometryReader { geometry in
                     let width = geometry.size.width
-                    let radius = (width - arcPadding * 2) / 2
+                    // Calculate radius so the arc endpoints reach the view edges
+                    // The endpoint x-offset from center is radius * cos(endAngle)
+                    // where endAngle = (90 - sweepAngle/2) degrees
+                    let endAngleRad = CGFloat((90.0 - sweepAngle / 2.0) * .pi / 180.0)
+                    let cosEnd = cos(endAngleRad)
+                    let radius = cosEnd > 0 ? (width / 2 - arcPadding) / cosEnd : (width - arcPadding * 2) / 2
                     let center = CGPoint(x: width / 2, y: geometry.size.height)
 
                     ZStack {
@@ -63,7 +68,7 @@ struct ContentView: View {
                         let maxPos = pointOnArc(center: center, radius: radius - 22, degrees: angleDegreesFor(value: targetMax))
                         Text("\(Int(targetMax))")
                             .font(.custom("Poppins-Regular", size: 14))
-                            .foregroundColor(.white)
+                            .foregroundColor(.white.opacity(0.5))
                             .position(maxPos)
 
                         // Value label (outside the arc)
@@ -92,26 +97,26 @@ struct ContentView: View {
                             .shadow(color: .black.opacity(0.5), radius: 4)
                             .frame(width: 12, height: 12)
                             .position(thumbPos)
-                    }
-                }
-                .aspectRatio(2, contentMode: .fit)
 
-                // Center text below arc
-                VStack(spacing: 4) {
-                    HStack(alignment: .firstTextBaseline, spacing: 2) {
-                        Text("\(Int(targetMin))-\(Int(targetMax))")
-                            .font(.custom("Poppins-SemiBold", size: 32))
-                            .foregroundColor(.white)
-                        Text("%")
-                            .font(.custom("Poppins-Regular", size: 18))
-                            .foregroundColor(.white.opacity(0.7))
+                        // Center text underneath the arc
+                        VStack(spacing: 4) {
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                Text("\(Int(targetMin))-\(Int(targetMax))")
+                                    .font(.custom("Poppins-SemiBold", size: 32))
+                                    .foregroundColor(.white)
+                                Text("%")
+                                    .font(.custom("Poppins-Regular", size: 18))
+                                    .foregroundColor(.white.opacity(0.7))
+                            }
+                            Text("TARGET STRAIN")
+                                .font(.custom("Poppins-Regular", size: 12))
+                                .foregroundColor(.white.opacity(0.6))
+                                .tracking(2)
+                        }
+                        .position(x: width / 2, y: center.y - radius * sin(CGFloat(sweepAngle / 2.0) * .pi / 180.0) / 2)
                     }
-                    Text("TARGET STRAIN")
-                        .font(.custom("Poppins-Regular", size: 12))
-                        .foregroundColor(.white.opacity(0.6))
-                        .tracking(2)
                 }
-                .padding(.top, -8)
+                .aspectRatio(1.6, contentMode: .fit)
             }
         }
 
