@@ -11,6 +11,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             StrainRangeArcSlider(value: 20, targetMin: 10, targetMax: 30)
+                .background(.blue)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
@@ -38,7 +39,10 @@ struct ContentView: View {
                     let endAngleRad = CGFloat((90.0 - sweepAngle / 2.0) * .pi / 180.0)
                     let cosEnd = cos(endAngleRad)
                     let radius = cosEnd > 0 ? (width / 2 - arcPadding) / cosEnd : (width - arcPadding * 2) / 2
-                    let center = CGPoint(x: width / 2, y: geometry.size.height)
+                    
+                    let shift = width * 0.136
+                    
+                    let center = CGPoint(x: width / 2, y: geometry.size.height + shift)
 
                     ZStack {
                         // Background arc track
@@ -102,21 +106,21 @@ struct ContentView: View {
                         VStack(spacing: 4) {
                             HStack(alignment: .firstTextBaseline, spacing: 2) {
                                 Text("\(Int(targetMin))-\(Int(targetMax))")
-                                    .font(.custom("Poppins-SemiBold", size: 32))
+                                    .font(.custom("Nunito-SemiBold", size: 40))
                                     .foregroundColor(.white)
                                 Text("%")
-                                    .font(.custom("Poppins-Regular", size: 18))
+                                    .font(.custom("Poppins-Regular", size: 40))
                                     .foregroundColor(.white.opacity(0.7))
                             }
                             Text("TARGET STRAIN")
-                                .font(.custom("Poppins-Regular", size: 12))
-                                .foregroundColor(.white.opacity(0.6))
+                                .font(.custom("Poppins-Regular", size: 14))
+                                .foregroundColor(.white)
                                 .tracking(2)
                         }
-                        .position(x: width / 2, y: center.y - radius * sin(CGFloat(sweepAngle / 2.0) * .pi / 180.0) / 2)
+                        .position(x: width / 2, y: 90)
                     }
                 }
-                .aspectRatio(1.6, contentMode: .fit)
+                .frame(height: 150)
             }
         }
 
