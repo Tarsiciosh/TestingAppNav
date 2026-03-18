@@ -9,61 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        ProgressCircle(
-            percentage: 100,
-            progressGradient: AngularGradient(
-                stops: [
-                    .init(color: Color(.blue), location: 0.0),
-                    .init(color: Color(.green), location: 0.33),
-                    .init(color: Color(.orange), location: 0.66),
-                    .init(color: Color(.red), location: 1.0)
-                ],
-                center: .center,
-                startAngle: .degrees(-5),
-                endAngle: .degrees(355)
-            )
-        ) {
-            Text("hello")
-        }
-        .frame(width: 180)
-    }
-    
-    struct ProgressCircle<Content: View>: View {
-        let percentage: Double?
-        var progressColor: Color = .green
-        var progressGradient: AngularGradient? = nil
-        var trackColor: Color = .gray
-        var lineWidth: CGFloat = 8
-        @ViewBuilder var content: () -> Content
-
-        private var progress: Double {
-            min((percentage ?? 0) / 100, 1.0)
-        }
-
-        var body: some View {
-            ZStack {
-                // Track
-                Circle()
-                    .stroke(trackColor, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-
-                // Progress
-                if let percentage = percentage, percentage > 0 {
-                    Circle()
-                        .trim(from: 0, to: progress)
-                        .stroke(
-                            progressGradient ?? AngularGradient(
-                                colors: [progressColor],
-                                center: .center
-                            ),
-                            style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                        )
-                        .rotationEffect(.degrees(-90))
-                }
-
-                // Content
-                content()
-            }
-        }
+        Text("hello")
     }
 }
 
