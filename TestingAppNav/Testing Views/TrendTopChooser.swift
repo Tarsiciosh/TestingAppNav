@@ -1,31 +1,40 @@
 import SwiftUI
 
-enum TrendDateRange: CaseIterable, Identifiable {
-    case oneWeek
-    case oneMonth
-    case oneYear
+public enum DateRangeType: Int {
+    case day
+    case week
+    case month
+    case threeMonths
+    case sixMonths
+    case year
+    case yearToDate
     case allTime
-
-    var id: Self { self }
+    case custom
 }
 
-extension TrendDateRange {
-    var displayName: String {
+extension DateRangeType {
+    var smallVersion: String {
         switch self {
-        case .oneWeek: "1W"
-        case .oneMonth: "1M"
-        case .oneYear: "1Y"
+        case .day: "1D"
+        case .week: "1W"
+        case .month: "1M"
+        case .threeMonths: "3M"
+        case .sixMonths: "6M"
+        case .year: "1Y"
+        case .yearToDate: "YTD"
         case .allTime: "All time"
+        case .custom: "Custom"
         }
     }
 }
 
-struct TrendTopChooser: View {
-    var onRangeChanged: @MainActor (TrendDateRange) -> Void = { _ in }
+struct TrendTopChooserView: View {
+    var ranges: [DateRangeType] = [.week, .month, .year, .allTime]
+    var onRangeChanged: @MainActor (DateRangeType) -> Void = { _ in }
     var onCalendarTapped: @MainActor () -> Void = {}
-    
-    //internal
-    @State var selectedRange: TrendDateRange = .oneWeek
+
+    // internal
+    @State private var selectedRange: DateRangeType = .week
 
     var body: some View {
         HStack(spacing: 8) {
@@ -56,16 +65,16 @@ struct TrendTopChooser: View {
 
     private var dateRangeSelector: some View {
         HStack(spacing: 0) {
-            ForEach(Array(TrendDateRange.allCases.enumerated()), id: \.element.id) { index, range in
+            ForEach(Array(ranges.enumerated()), id: \.element) { index, range in
                 if index > 0 {
-                    divider(leftRange: TrendDateRange.allCases[index - 1], rightRange: range)
+                    divider(leftRange: ranges[index - 1], rightRange: range)
                 }
 
                 Button {
                     selectedRange = range
                     onRangeChanged(range)
                 } label: {
-                    Text(range.displayName)
+                    Text(range.smallVersion)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .background(
@@ -86,7 +95,7 @@ struct TrendTopChooser: View {
         .frame(height: 50)
     }
 
-    private func divider(leftRange: TrendDateRange, rightRange: TrendDateRange) -> some View {
+    private func divider(leftRange: DateRangeType, rightRange: DateRangeType) -> some View {
         let visible = selectedRange != leftRange && selectedRange != rightRange
         return Rectangle()
             .fill(Color.white.opacity(visible ? 0.3 : 0))
@@ -97,7 +106,7 @@ struct TrendTopChooser: View {
 #Preview {
     ZStack {
         Color.black.ignoresSafeArea()
-        TrendTopChooser()
+        TrendTopChooserView()
             .padding(.horizontal)
     }
 }
