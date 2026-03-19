@@ -29,12 +29,14 @@ extension DateRangeType {
 }
 
 struct TrendTopChooserView: View {
-    var ranges: [DateRangeType] = [.week, .month, .year, .allTime]
     var onRangeChanged: @MainActor (DateRangeType) -> Void = { _ in }
     var onCalendarTapped: @MainActor () -> Void = {}
-
-    // internal
+    
+    //internal
+    var ranges: [DateRangeType] = [.week, .month, .year, .allTime]
     @State private var selectedRange: DateRangeType = .week
+    
+    let mainColor: Color = .black
 
     var body: some View {
         HStack(spacing: 8) {
@@ -44,7 +46,7 @@ struct TrendTopChooserView: View {
                 .padding(.horizontal, 4)
                 .background(
                     Capsule()
-                        .fill(Color.white.opacity(0.1))
+                        .fill(Color.black.opacity(0.1))
                 )
 
             // Calendar button
@@ -57,10 +59,11 @@ struct TrendTopChooserView: View {
                     .frame(width: 50, height: 50)
                     .background(
                         Circle()
-                            .fill(Color.white.opacity(0.1))
+                            .fill(mainColor.opacity(0.1))
                     )
             }
         }
+        .padding(.vertical, 20)
     }
 
     private var dateRangeSelector: some View {
@@ -75,13 +78,14 @@ struct TrendTopChooserView: View {
                     onRangeChanged(range)
                 } label: {
                     Text(range.smallVersion)
+                        
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .background(
                             Group {
                                 if selectedRange == range {
                                     Capsule()
-                                        .fill(Color.white.opacity(0.2))
+                                        .fill(mainColor.opacity(0.2))
                                 }
                             }
                             .frame(height: 48)
@@ -89,7 +93,7 @@ struct TrendTopChooserView: View {
                 }
             }
         }
-        .font(.system(size: 15, weight: .medium))
+        .font(.custom("Nunito-SemiBold", size: 16))
         .minimumScaleFactor(0.5)
         .lineLimit(1)
         .frame(height: 50)
@@ -98,14 +102,14 @@ struct TrendTopChooserView: View {
     private func divider(leftRange: DateRangeType, rightRange: DateRangeType) -> some View {
         let visible = selectedRange != leftRange && selectedRange != rightRange
         return Rectangle()
-            .fill(Color.white.opacity(visible ? 0.3 : 0))
+            .fill(mainColor.opacity(visible ? 0.3 : 0))
             .frame(width: 1, height: 14)
     }
 }
 
 #Preview {
     ZStack {
-        Color.black.ignoresSafeArea()
+        Color.blue.ignoresSafeArea()
         TrendTopChooserView()
             .padding(.horizontal)
     }
