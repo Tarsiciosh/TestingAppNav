@@ -29,12 +29,13 @@ extension DateRangeType {
 }
 
 struct TrendTopChooserView: View {
-    var onRangeChanged: @MainActor (DateRangeType) -> Void = { _ in }
+    var onRangeChanged: @MainActor (DateRangeType, @escaping @MainActor () -> Void) -> Void = { _, done in done() }
     var onCalendarTapped: @MainActor () -> Void = {}
-    
-    //internal
+
+    // internal
     var ranges: [DateRangeType] = [.week, .month, .year, .allTime]
     @State private var selectedRange: DateRangeType = .week
+    @State private var isLoading = false
     
     var body: some View {
         HStack(spacing: 8) {
@@ -73,22 +74,34 @@ struct TrendTopChooserView: View {
 
                 Button {
                     selectedRange = range
-                    onRangeChanged(range)
+                    isLoading = true
+                    onRangeChanged(range) {
+                        isLoading = false
+                    }
                 } label: {
-                    Text(range.smallVersion)
-                        
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            Group {
-                                if selectedRange == range {
-                                    Capsule()
-                                        .fill(Color.white.opacity(0.1))
-                                }
+                    ZStack {
+                        // Keep the text in layout but hide it when showing spinner
+                        Text(range.smallVersion)
+                            .opacity(isLoading && selectedRange == range ? 0 : 1)
+
+                        if isLoading && selectedRange == range {
+                            ProgressView()
+                                .tint(.white)
+                        }
+                    }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        Group {
+                            if selectedRange == range {
+                                Capsule()
+                                    .fill(Color.white.opacity(0.1))
                             }
-                            .frame(height: 48)
-                        )
+                        }
+                        .frame(height: 48)
+                    )
                 }
+                .disabled(isLoading)
             }
         }
         .font(.custom("Nunito-SemiBold", size: 16))
@@ -108,8 +121,13 @@ struct TrendTopChooserView: View {
 #Preview {
     ZStack {
         Color.black.ignoresSafeArea()
-        TrendTopChooserView()
-            .padding(.horizontal)
+        TrendTopChooserView { range, done in
+            // Simulate an API call
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                done()
+            }
+        }
+        .padding(.horizontal)
     }
 }
 
