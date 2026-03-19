@@ -41,7 +41,7 @@ struct TrendTopChooserView: View {
         HStack(spacing: 8) {
             // Date range selector
             dateRangeSelector
-                .padding(.vertical, 4)
+               // .padding(.vertical, 4)
                 .padding(.horizontal, 4)
                 .background(
                     Capsule()
@@ -98,7 +98,7 @@ struct TrendTopChooserView: View {
                                     .fill(Color.white.opacity(0.1))
                             }
                         }
-                        .frame(height: 48)
+                        .frame(height: 42)
                     )
                 }
                 .disabled(isLoading)
