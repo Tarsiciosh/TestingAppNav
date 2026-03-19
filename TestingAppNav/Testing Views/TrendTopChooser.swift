@@ -1,12 +1,23 @@
 import SwiftUI
 
-enum TrendDateRange: String, CaseIterable, Identifiable {
-    case oneWeek = "1W"
-    case oneMonth = "1M"
-    case oneYear = "1Y"
-    case allTime = "All time"
+enum TrendDateRange: CaseIterable, Identifiable {
+    case oneWeek
+    case oneMonth
+    case oneYear
+    case allTime
 
-    var id: String { rawValue }
+    var id: Self { self }
+}
+
+extension TrendDateRange {
+    var displayName: String {
+        switch self {
+        case .oneWeek: "1W"
+        case .oneMonth: "1M"
+        case .oneYear: "1Y"
+        case .allTime: "All time"
+        }
+    }
 }
 
 struct TrendTopChooser: View {
@@ -54,7 +65,7 @@ struct TrendTopChooser: View {
                     selectedRange = range
                     onRangeChanged(range)
                 } label: {
-                    Text(range.rawValue)
+                    Text(range.displayName)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .background(
@@ -75,13 +86,11 @@ struct TrendTopChooser: View {
         .frame(height: 50)
     }
 
-    @ViewBuilder
     private func divider(leftRange: TrendDateRange, rightRange: TrendDateRange) -> some View {
-        if selectedRange != leftRange && selectedRange != rightRange {
-            Rectangle()
-                .fill(Color.white.opacity(0.3))
-                .frame(width: 1, height: 14)
-        }
+        let visible = selectedRange != leftRange && selectedRange != rightRange
+        return Rectangle()
+            .fill(Color.white.opacity(visible ? 0.3 : 0))
+            .frame(width: 1, height: 14)
     }
 }
 
