@@ -36,8 +36,6 @@ struct TrendTopChooserView: View {
     var ranges: [DateRangeType] = [.week, .month, .year, .allTime]
     @State private var selectedRange: DateRangeType = .week
     
-    let mainColor: Color = .black
-
     var body: some View {
         HStack(spacing: 8) {
             // Date range selector
@@ -46,7 +44,7 @@ struct TrendTopChooserView: View {
                 .padding(.horizontal, 4)
                 .background(
                     Capsule()
-                        .fill(Color.black.opacity(0.1))
+                        .fill(.ultraThinMaterial)
                 )
 
             // Calendar button
@@ -59,7 +57,7 @@ struct TrendTopChooserView: View {
                     .frame(width: 50, height: 50)
                     .background(
                         Circle()
-                            .fill(mainColor.opacity(0.1))
+                            .fill(.ultraThinMaterial)
                     )
             }
         }
@@ -85,7 +83,7 @@ struct TrendTopChooserView: View {
                             Group {
                                 if selectedRange == range {
                                     Capsule()
-                                        .fill(mainColor.opacity(0.2))
+                                        .fill(Color.white.opacity(0.1))
                                 }
                             }
                             .frame(height: 48)
@@ -102,14 +100,14 @@ struct TrendTopChooserView: View {
     private func divider(leftRange: DateRangeType, rightRange: DateRangeType) -> some View {
         let visible = selectedRange != leftRange && selectedRange != rightRange
         return Rectangle()
-            .fill(mainColor.opacity(visible ? 0.3 : 0))
+            .fill(Color.white.opacity(visible ? 0.3 : 0))
             .frame(width: 1, height: 14)
     }
 }
 
 #Preview {
     ZStack {
-        Color.blue.ignoresSafeArea()
+        Color.black.ignoresSafeArea()
         TrendTopChooserView()
             .padding(.horizontal)
     }
