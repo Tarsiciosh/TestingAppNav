@@ -10,10 +10,11 @@ enum TrendDateRange: String, CaseIterable, Identifiable {
 }
 
 struct TrendTopChooser: View {
-    @State var selectedRange: TrendDateRange = .oneWeek
-
     var onRangeChanged: @MainActor (TrendDateRange) -> Void = { _ in }
     var onCalendarTapped: @MainActor () -> Void = {}
+    
+    //internal
+    @State var selectedRange: TrendDateRange = .oneWeek
 
     var body: some View {
         HStack(spacing: 8) {
@@ -33,7 +34,7 @@ struct TrendTopChooser: View {
                 Image(systemName: "calendar")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.white)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 50, height: 50)
                     .background(
                         Circle()
                             .fill(Color.white.opacity(0.1))
@@ -56,7 +57,6 @@ struct TrendTopChooser: View {
                     Text(range.rawValue)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
                         .background(
                             Group {
                                 if selectedRange == range {
@@ -64,6 +64,7 @@ struct TrendTopChooser: View {
                                         .fill(Color.white.opacity(0.2))
                                 }
                             }
+                            .frame(height: 48)
                         )
                 }
             }
@@ -71,6 +72,7 @@ struct TrendTopChooser: View {
         .font(.system(size: 15, weight: .medium))
         .minimumScaleFactor(0.5)
         .lineLimit(1)
+        .frame(height: 50)
     }
 
     @ViewBuilder
