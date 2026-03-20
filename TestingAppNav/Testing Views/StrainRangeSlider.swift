@@ -10,23 +10,38 @@ struct StrainRangeArcSlider: View {
     private let trackLineWidth: CGFloat = 5
     private let sweepAngle: Double = 120 // total arc sweep in degrees (< 180 for a shorter arc)
 
+    // The frame height ratio relative to width.
+    // Derived from: topMargin + arcVisibleHeight + bottomTextSpace
+    // where topMargin = 0.068w, arcVisibleHeight ≈ 0.231w, bottomTextSpace = 0.20w
+    // Total ≈ 0.499w. We use 0.50 for a clean value.
+    private let heightRatio: CGFloat = 0.50
+
     var body: some View {
         let arcPadding: CGFloat = 44
-        
         let screenWidth = UIScreen.main.bounds.width
         
         VStack(spacing: 0) {
             GeometryReader { geometry in
                 let width = geometry.size.width
+                let height = geometry.size.height
                 // Calculate radius so the arc endpoints reach the view edges
-                // The endpoint x-offset from center is radius * cos(endAngle)
-                // where endAngle = (90 - sweepAngle/2) degrees
                 let endAngleRad = CGFloat((90.0 - sweepAngle / 2.0) * .pi / 180.0)
                 let cosEnd = cos(endAngleRad)
+                let sinEnd = sin(endAngleRad)
                 let radius = cosEnd > 0 ? (width / 2 - arcPadding) / cosEnd : (width - arcPadding * 2) / 2
-                let shift = width * 0.136
-                let center = CGPoint(x: width / 2, y: geometry.size.height + shift)
-            
+
+                // Space above the arc top for the value label + thumb
+                let topMargin: CGFloat = width * 0.068
+                // Arc center is placed so the arc top sits at topMargin
+                // arc top = centerY - radius, so centerY = topMargin + radius
+                let centerY = topMargin + radius
+                let center = CGPoint(x: width / 2, y: centerY)
+
+                // The arc endpoint level (bottom of visible arc)
+                let arcBottomY = centerY - radius * sinEnd
+                // Position text just below the arc endpoints
+                let textCenterY = arcBottomY - width * 0.02
+
                 ZStack {
                     // Background arc track
                     SemiArc(
@@ -89,22 +104,21 @@ struct StrainRangeArcSlider: View {
                     VStack(spacing: 4) {
                         HStack(alignment: .firstTextBaseline, spacing: 2) {
                             Text("\(Int(targetMin))-\(Int(targetMax))")
-                                .font(.custom("Nunito-SemiBold", size: screenWidth * 0.0909)) //40
+                                .font(.custom("Nunito-SemiBold", size: width * 0.0909)) //40
                                 .foregroundColor(.white)
                             Text("%")
-                                .font(.custom("Poppins-Regular", size: screenWidth * 0.0909)) //40
+                                .font(.custom("Poppins-Regular", size: width * 0.0909)) //40
                                 .foregroundColor(.white.opacity(0.7))
                         }
                         Text("TARGET STRAIN")
-                            .font(.custom("Poppins-Regular", size: screenWidth * 0.0318)) //14
+                            .font(.custom("Poppins-Regular", size: width * 0.0318)) //14
                             .foregroundColor(.white)
                             .tracking(2)
                     }
-                    .position(x: width / 2, y: 90)
+                    .position(x: width / 2, y: textCenterY)
                 }
             }
-            .frame(height: screenWidth * 0.34)
-            .padding(.top, 20)
+            .frame(height: screenWidth * heightRatio)
         }
         .background(.red)
     }
