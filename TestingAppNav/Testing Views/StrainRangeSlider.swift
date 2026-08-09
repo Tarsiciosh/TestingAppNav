@@ -10,11 +10,9 @@ struct StrainRangeArcSlider: View {
     private let trackLineWidth: CGFloat = 5
     private let sweepAngle: Double = 120 // total arc sweep in degrees (< 180 for a shorter arc)
 
-    // The frame height ratio relative to width.
-    // Derived from: topMargin + arcVisibleHeight + bottomTextSpace
-    // where topMargin = 0.068w, arcVisibleHeight ≈ 0.231w, bottomTextSpace = 0.20w
-    // Total ≈ 0.499w. We use 0.50 for a clean value.
-    private let heightRatio: CGFloat = 0.50
+    // Frame height as a ratio of screen width.
+    // Derived from: topMargin(0.068) + arcVisibleHeight(0.231) + textOffset(-0.02) + textHalfHeight(0.07) ≈ 0.35
+    private let heightRatio: CGFloat = 0.38
 
     var body: some View {
         let arcPadding: CGFloat = 44
